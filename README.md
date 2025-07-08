@@ -56,12 +56,31 @@ $results = (new ArrayQuery($users))
   ->get();
 ```
 
+Output:
+
+```php
+[
+  ['name' => 'Alice', 'salary' => 70000],
+  ['name' => 'Bob', 'salary' => 55000],
+  ['name' => 'Eve', 'salary' => 72000],
+]
+```
+
 ### 3. WHERE with conditions and parameters
 
 ```php
 $results = (new ArrayQuery($users))
   ->where("salary > ? AND name != '?'", [60000, 'Bob'])
   ->get();
+```
+
+Output:
+
+```php
+[
+  ['id' => 1, 'name' => 'Alice', 'role_id' => 10, 'dept_id' => 100, 'salary' => 70000],
+  ['id' => 3, 'name' => 'Eve', 'role_id' => 10, 'dept_id' => 100, 'salary' => 72000],
+]
 ```
 
 ### 4. JOIN arrays together (INNER and LEFT)
@@ -74,6 +93,16 @@ $results = (new ArrayQuery($users))
   ->get();
 ```
 
+Output:
+
+```php
+[
+  ['name' => 'Alice', 'r.title' => 'Admin', 'd.name' => 'Engineering'],
+  ['name' => 'Bob', 'r.title' => 'Editor', 'd.name' => 'Marketing'],
+  ['name' => 'Eve', 'r.title' => 'Admin', 'd.name' => 'Engineering'],
+]
+```
+
 ### 5. ORDER BY ascending or descending
 
 ```php
@@ -81,6 +110,16 @@ $results = (new ArrayQuery($users))
   ->orderBy('salary', 'desc')
   ->select(['name', 'salary'])
   ->get();
+```
+
+Output:
+
+```php
+[
+  ['name' => 'Eve', 'salary' => 72000],
+  ['name' => 'Alice', 'salary' => 70000],
+  ['name' => 'Bob', 'salary' => 55000],
+]
 ```
 
 ### 6. GROUP BY with aggregation (SUM, AVG, COUNT, MAX, MIN)
@@ -106,13 +145,33 @@ foreach ($grouped as $department => $group) {
 $results = (new ArrayQuery($users))
   ->limit(2)
   ->get();
+```
 
+Output:
+
+```php
+[
+  ['id' => 1, 'name' => 'Alice', 'role_id' => 10, 'dept_id' => 100, 'salary' => 70000],
+  ['id' => 2, 'name' => 'Bob', 'role_id' => 20, 'dept_id' => 200, 'salary' => 55000],
+]
+```
+
+```php
 // PAGINATE
 $page = (new ArrayQuery($users))
   ->orderBy('name')
   ->paginate(1, 2); // Page 1, 2 users per page
 
 print_r($page['data']);
+```
+
+Output:
+
+```php
+[
+  ['id' => 1, 'name' => 'Alice', 'role_id' => 10, 'dept_id' => 100, 'salary' => 70000],
+  ['id' => 2, 'name' => 'Bob', 'role_id' => 20, 'dept_id' => 200, 'salary' => 55000],
+]
 ```
 
 ### 8. Exporting Data
